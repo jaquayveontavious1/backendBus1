@@ -1,18 +1,14 @@
 from django.db import models
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import User
-# Create your models here.
-class Users(models.Model) :
-    username = models.OneToOneField(User,on_delete=models.CASCADE)
-    email = models.EmailField(unique=True)
-    password = models.CharField(max_length=255)
 
-    def __str__(self) :
-        return (f"{self.username.username}")
+# Create your models here.
+
 
 class School(models.Model) :
     name = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
+    school_image = models.ImageField(upload_to='school_pictures/',null=True,blank=True)
     contact_regex = RegexValidator(regex=r'^\+254\s?[7|0][0-9]{2}\s?[0-9]{3}\s?[0-9]{3}$',message="Phone number must be entered in the format: +254123456789 or +254 123 456 789 (up to 10 digits).")
     contact_number = models.CharField(validators=[contact_regex],max_length=15,verbose_name='Phone number')
     email = models.EmailField()
@@ -58,6 +54,8 @@ class Seat(models.Model) :
     seat_number = models.CharField(max_length=100)
     is_available = models.BooleanField(default=True)
     bus = models.ForeignKey(Bus,on_delete=models.CASCADE)
+    route = models.ForeignKey(Route,on_delete=models.SET_NULL,null=True,blank=True)
+    booked_by = models.ForeignKey(User,on_delete=models.SET_NULL,blank=True,null=True)
 
     def __str__(self) :
         return(f"{self.seat_number}")
@@ -86,12 +84,12 @@ class Booking(models.Model) :
         ('cancelled','Cancelled'),
         ('confirmed','Confirmed')
     ]
-    user = models.ForeignKey(Users,on_delete=models.CASCADE)
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
     bus = models.ForeignKey(Bus,on_delete=models.CASCADE)
     route = models.ForeignKey(Route,on_delete=models.CASCADE)
     seat = models.ForeignKey(Seat,on_delete=models.CASCADE)
     booking_date = models.DateField()
-    status = models.CharField(max_length=100,choices=STATUS_CHOICES)
+    payment_status = models.CharField(max_length=100,choices=STATUS_CHOICES)
     school = models.ForeignKey(School,on_delete=models.CASCADE)
 
     def __str__(self) :
@@ -110,7 +108,7 @@ class Payment(models.Model) :
         ('cancelled','Cancelled'),
         ('confirmed','Confirmed')
     ]
-    user = models.ForeignKey(Users,on_delete=models.CASCADE)
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
     booking = models.ForeignKey(Booking,on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=10,decimal_places=2)
     payment_method = models.CharField(max_length=255,choices=PAYMENT_METHODS)
