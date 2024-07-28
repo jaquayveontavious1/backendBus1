@@ -1,7 +1,9 @@
 from django.db import models
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import User
-
+import qrcode
+from io import BytesIO
+from django.core.files import File
 # Create your models here.
 
 
@@ -88,10 +90,23 @@ class Booking(models.Model) :
     bus = models.ForeignKey(Bus,on_delete=models.CASCADE)
     route = models.ForeignKey(Route,on_delete=models.CASCADE)
     seat = models.ForeignKey(Seat,on_delete=models.CASCADE)
+    contact_regex = RegexValidator(regex=r'^(\+254)?[ ]?[7]{1}([0-9]{1})([0-9]{1})[ ]?[0-9]{3}[ ]?[0-9]{3}$',message="Phone number must be entered in the format: +254123456789 or +254 123 456 789 (up to 10 digits).")
+    contact_number = models.CharField(validators=[contact_regex],max_length=15,verbose_name='Phone number',null=True,blank=True)
     booking_date = models.DateField()
-    payment_status = models.CharField(max_length=100,choices=STATUS_CHOICES)
+    total_amount = models.DecimalField(max_digits=10,decimal_places=2,null=True,blank=True)
+    payment_status = models.CharField(max_length=100,choices=STATUS_CHOICES,default='Pending')
     school = models.ForeignKey(School,on_delete=models.CASCADE)
+    qr_code = models.ImageField(upload_to='booking_qr/',null=True,blank=True)
+    
 
+
+    def save(self,*args,**kwargs) :
+        qr_image = qrcode.make(f"Booking ID :{self.id}\nUser:{self.user}\nRoute: {self.route} ")
+        buffer = BytesIO()
+        qr_image.save(buffer)
+        filebuffer = File(buffer,name=f'qr_code_{self.id}.png')
+        self.qr_code.save(f'qr_code_{self.id}.png',filebuffer,save=False)
+        super().save(*args,**kwargs)
     def __str__(self) :
         return (f"{self.user} in {self.bus}")
 

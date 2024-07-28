@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'profiles',
     'knox',
     'accounts',
+    'django_filters',
     'corsheaders',
     'rest_framework',
     'django.contrib.admin',
@@ -114,6 +115,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
@@ -124,7 +126,12 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+##MPESA API
 import os
+MPESA_ENVIRONMENT = os.getenv('MPESA_ENVIRONMENT','sandbox')
+MPESA_CONSUMER_KEY = os.getenv('MPESA_CONSUMER_KEY','Fv3VVAeObJ1Hkd7iI7PMbjnjNlLYYfMjqbhiEHu0mSmwDPIx')
+MPESA_CONSUMER_SECRET = os.getenv('MPESA_CONSUMER_SECRET','IWXIqINvVqxJV1k8f91GaY0w0fXIcKX6g992o2z7BhH2rOYJ4gXQ5ROmMOTyto0w')
+MPESA_SHORTCODE = os.getenv('')
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
@@ -146,5 +153,9 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PERMISSION_CLASSES' : [
         'rest_framework.permissions.IsAuthenticated',
-    ]
+    ],
+    'DEFAULT_FILTER_BACKENDS' : [
+        'django_filters.rest_framework.DjangoFilterBackend'
+    ],
+    
 }
