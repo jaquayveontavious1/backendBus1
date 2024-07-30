@@ -32,6 +32,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 
 INSTALLED_APPS = [
+    'tracking',
     'booking',
     'profiles',
     'knox',
