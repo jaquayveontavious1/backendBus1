@@ -32,13 +32,15 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 
 INSTALLED_APPS = [
+    'corsheaders',
+   
     'tracking',
     'booking',
     'profiles',
     'knox',
     'accounts',
-    'django_filters',
-    'corsheaders',
+    
+    
     'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',

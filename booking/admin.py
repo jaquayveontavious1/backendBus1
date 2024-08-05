@@ -1,11 +1,23 @@
 from django.contrib import admin
 from .models import Bus,Booking,Payment,Route,Driver,School,Seat
 # Register your models here.
+#@admin.action(description='Create bus with seats')
+
+
+##BUS ADMIN
+def create_bus_with_seats(modeladmin,request,queryset) :
+    for bus in queryset :
+        for i in range(1, bus.capacity + 1):
+            Seat.objects.create(seat_number=str(i),bus=bus)
+    modeladmin.message_user(request,'Seats created for selected buses')
+create_bus_with_seats.short_description = 'Created seats for selected buses'
 class BusAdmin(admin.ModelAdmin) :
+    
     list_display = ['bus_number','capacity','type','license_plate','route']
     search_fields = ['route']
+    actions = [create_bus_with_seats]
 admin.site.register(Bus,BusAdmin)
-
+##BOOKING ADMIN
 class BookingAdmin(admin.ModelAdmin) :
     list_display = ['user','bus','route','seat','booking_date','payment_status','school']
     search_fields = ['user','bus','route','booking_date','payment_status','school']

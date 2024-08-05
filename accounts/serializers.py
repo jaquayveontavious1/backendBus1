@@ -7,7 +7,7 @@ from django.contrib.auth import authenticate
 class UserSerializer(serializers.ModelSerializer) :
     class Meta :
         model = User
-        fields = ['username','password']
+        fields = ['id','username','password']
 
 
 #AuthTokenSerializer -> Store the token for each user

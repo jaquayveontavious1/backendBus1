@@ -55,12 +55,12 @@ class Bus(models.Model) :
 class Seat(models.Model) :
     seat_number = models.CharField(max_length=100)
     is_available = models.BooleanField(default=True)
-    bus = models.ForeignKey(Bus,on_delete=models.CASCADE)
+    bus = models.ForeignKey(Bus,on_delete=models.CASCADE,related_name='seats')
     route = models.ForeignKey(Route,on_delete=models.SET_NULL,null=True,blank=True)
     booked_by = models.ForeignKey(User,on_delete=models.SET_NULL,blank=True,null=True)
 
     def __str__(self) :
-        return(f"{self.seat_number}")
+        return(f"Seat : {self.seat_number} in {self.bus.bus_number}")
 class Driver(models.Model) :
     name = models.CharField(max_length=200)
     license_number = models.PositiveIntegerField()

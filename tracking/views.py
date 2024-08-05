@@ -7,12 +7,26 @@ from rest_framework.permissions import AllowAny
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.generics import ListAPIView
+from rest_framework.decorators import api_view
 # Create your views here.
+import json
+import threading
+from django.http import JsonResponse
+from rest_framework.views import APIView
+from .simulation_gps import initial_bus_location,update_bus_location
+bus_locations = initial_bus_location.copy()
+def update_locations_periodically() :
+    global bus_locations
+    bus_locations = update_bus_location(bus_locations)
+    threading.Timer(5.0,update_locations_periodically).start()
+
+update_locations_periodically()
+    
 
 class BusLocationView(ListAPIView) :
-    queryset = BusLocation.objects.all()
-    serializer_class = BusLocationSerializer
-    permission_classes = [AllowAny]
+   permission_classes = [AllowAny]
+   def get(self,request) :
+       return JsonResponse(bus_locations,safe=False)
 
 class UpdateBusLocationView(APIView) :
     permission_classes = [AllowAny]
