@@ -21,7 +21,7 @@ from rest_framework import status
 from rest_framework.generics import ListAPIView
 from .pagination import CustomPagination
 from rest_framework import generics
-#class BookingViewSet(viewsets.ModelViewSet) :
+
 class CreateBookingView(generics.CreateAPIView) :
     queryset = Booking.objects.all()
     serializer_class = BookingSerializer
