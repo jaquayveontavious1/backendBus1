@@ -84,15 +84,15 @@ WSGI_APPLICATION = 'backendBus.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
+import os
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'busbookingsystem',
-        'USER' :'root',
-        'PASSWORD' : 'Muthoni06$',
-        'HOST' : 'localhost',
-        'PORT' : '3306'
+        'NAME': os.getenv('DB_NAME'),
+        'USER' :os.getenv('DB_USER'),
+        'PASSWORD' : os.getenv('DB_PASSWORD'),
+        'HOST' : os.getenv('DB_HOST'),
+        'PORT' : os.getenv('DB_PORT')
 
 
     }
@@ -151,14 +151,10 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES' : [
-        'knox.auth.TokenAuthentication',
-    ],
+    
     'DEFAULT_PERMISSION_CLASSES' : [
         'rest_framework.permissions.IsAuthenticated',
     ],
-    'DEFAULT_FILTER_BACKENDS' : [
-        'django_filters.rest_framework.DjangoFilterBackend'
-    ],
+   
     
 }
