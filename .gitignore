@@ -174,4 +174,5 @@ cython_debug/
 # End of https://www.toptal.com/developers/gitignore/api/django
 
 #sensitive file
+json-file
 bus-booking-e3583-firebase-adminsdk-ilzyn-bea7d33eb7.json
