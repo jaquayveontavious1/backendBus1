@@ -176,3 +176,7 @@ cython_debug/
 #sensitive file
 json-file
 bus-booking-e3583-firebase-adminsdk-ilzyn-bea7d33eb7.json
+
+
+##Zip File
+backendBus.git
